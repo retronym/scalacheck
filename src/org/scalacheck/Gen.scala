@@ -184,7 +184,7 @@ object Gen {
    *  is given by <code>n</code>. */
   def containerOfN[C[_],T](n: Int, g: Gen[T])(implicit b: Buildable[C]
   ): Gen[C[T]] = sequence[C,T](new Iterable[Gen[T]] {
-    def elements = new Iterator[Gen[T]] {
+    def iterator = new Iterator[Gen[T]] {
       var i = 0
       def hasNext = i < n
       def next = { i += 1; g }

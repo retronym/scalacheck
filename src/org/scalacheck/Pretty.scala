@@ -43,7 +43,7 @@ object Pretty {
     }.mkString("\n")
   }
 
-  implicit lazy val prettyArgs = Pretty { args: List[Arg] =>
+  implicit lazy val prettyArgs: Pretty[List[Arg]] = Pretty { args: List[Arg] =>
     if(args.isEmpty) "" else {
       for((a,i) <- args.zipWithIndex) yield {
         val l = if(a.label == "") "ARG_"+i else a.label

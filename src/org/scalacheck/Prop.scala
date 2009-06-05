@@ -427,7 +427,7 @@ object Prop {
   /** Universal quantifier, shrinks failed arguments with the default
    *  shrink function for the type */
   def forAll[T,P](g: Gen[T])(f: T => P)
-    (implicit s: Shrink[T], p: P => Prop) = forAllShrink(g, shrink[T])(f)
+    (implicit s: Shrink[T], p: P => Prop): Prop = forAllShrink(g, shrink[T])(f)
 
   /** A property that holds if at least one of the given generators
    *  fails generating a value */
@@ -471,7 +471,7 @@ object Prop {
     f:  A1 => P)(implicit
     p: P => Prop,
     a1: Arbitrary[A1], s1: Shrink[A1]
-  ) = forAllShrink(arbitrary[A1],shrink[A1])(f andThen p)
+  ): Prop = forAllShrink(arbitrary[A1],shrink[A1])(f andThen p)
 
   /** Converts a function into a universally quantified property */
   def forAll[A1,A2,P] (
@@ -556,7 +556,7 @@ object Prop {
     f:  A1 => P)(implicit
     p: P => Prop,
     a1: Arbitrary[A1], s1: Shrink[A1]
-  ) = forAllShrink(arbitrary[A1],shrink[A1])(f andThen p)
+  ): Prop = forAllShrink(arbitrary[A1],shrink[A1])(f andThen p)
 
   /** Converts a function into a universally quantified property.
    *  @deprecated Use <code>forAll</code> instead. */
