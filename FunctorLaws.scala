@@ -1,3 +1,5 @@
+// Compiled against trunk r425
+
 // What is a Functor?
 trait Functor[F[_]] {
   def fmap[A, B](f: A => B, value: F[A]): F[B]
