@@ -7,15 +7,15 @@ trait Functor[F[_]] {
 
 // Some functor instances
 object Functor {
-  implicit def ListFunctor = new Functor[List] {
+  implicit val ListFunctor = new Functor[List] {
     def fmap[A, B](f: A => B, value: List[A]) = value map f
   }
 
-  implicit def OptionFunctor = new Functor[Option] {
+  implicit val OptionFunctor = new Functor[Option] {
     def fmap[A, B](f: A => B, value: Option[A]) = value map f
   }
 
-  implicit def Function0Functor = new Functor[Function0] {
+  implicit val Function0Functor = new Functor[Function0] {
     def fmap[A, B](f: A => B, value: Function0[A]) = new Function0[B] {
       def apply = f(value.apply)
     }
