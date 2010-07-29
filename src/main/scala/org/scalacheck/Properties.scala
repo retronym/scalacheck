@@ -26,6 +26,8 @@ package org.scalacheck
  */
 class Properties(val name: String) extends Prop {
 
+  import Test.cmdLineParser.{Success, NoSuccess}
+
   private val props = new scala.collection.mutable.ListBuffer[(String,Prop)]
 
   /** Returns one property which holds if and only if all of the
@@ -38,19 +40,28 @@ class Properties(val name: String) extends Prop {
 
   def apply(p: Prop.Params) = oneProperty(p)
 
-  override def check(prms: Test.Params): Unit = {
-    import ConsoleReporter.{testReport, propReport}
-    Test.checkProperties(this, prms, propReport, testReport)
-  }
-
-  /** Convenience method that checks all properties and reports the
-   *  result on the console. Calling <code>ps.check</code> is equal
-   *  to calling <code>Test.checkProperties(ps)</code>, but this method does
-   *  not return the test statistics. If you need to get the results
-   *  from the tests, or if you want more control over the test parameters,
-   *  use the <code>checkProperties</code> methods in <code>Test</code>
+  /** Convenience method that checks the properties with the given parameters
+   *  and reports the result on the console. If you need to get the results 
+   *  from the test use the <code>check</code> methods in <code>Test</code> 
    *  instead. */
-  override def check: Unit = Test.checkProperties(this)
+  override def check(prms: Test.Params): Unit = Test.checkProperties(
+    prms copy (testCallback = ConsoleReporter(1) chain prms.testCallback), this
+  )
+
+  /** Convenience method that checks the properties and reports the
+   *  result on the console. If you need to get the results from the test use
+   *  the <code>check</code> methods in <code>Test</code> instead. */
+  override def check: Unit = check(Test.Params())
+
+  /** Convenience method that makes it possible to use a this instance
+   *  as an application that checks itself on execution */
+  override def main(args: Array[String]): Unit = 
+    Test.cmdLineParser.parseParams(args) match {
+      case Success(params, _) => Test.checkProperties(params, this)
+      case e: NoSuccess =>
+        println("Incorrect options:"+"\n"+e+"\n")
+        Test.cmdLineParser.printHelp
+    }
 
   /** Adds all properties from another property collection to this one. */
   def include(ps: Properties) = for((n,p) <- ps.properties) property(n) = p 
@@ -60,5 +71,6 @@ class Properties(val name: String) extends Prop {
   class PropertySpecifier() {
     def update(propName: String, p: Prop) = props += ((name+"."+propName, p))
   }
+
   lazy val property = new PropertySpecifier()
 }

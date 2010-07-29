@@ -92,7 +92,7 @@ object Arbitrary {
 
   /** Arbitrary instance of Long */
   implicit lazy val arbLong: Arbitrary[Long] = Arbitrary(
-    Gen.chooseNum(Long.MinValue >> 2, Long.MaxValue >> 2)
+    Gen.chooseNum(Long.MinValue / 2, Long.MaxValue / 2)
   )
 
   /** Arbitrary instance of Float */
@@ -107,7 +107,7 @@ object Arbitrary {
   /** Arbitrary instance of Double */
   implicit lazy val arbDouble: Arbitrary[Double] = Arbitrary(
     Gen.chooseNum(
-      Double.MinValue, Double.MaxValue
+      Double.MinValue / 2, Double.MaxValue / 2
       // As above.  Perhaps behind some option?
       // Double.Epsilon, Double.NaN, Double.PositiveInfinity, Double.NegativeInfinity
     )
@@ -209,7 +209,7 @@ object Arbitrary {
       minSize <- choose(0,500)
       sizeDiff <- choose(0,500)
       maxSize <- choose(minSize, minSize + sizeDiff)
-    } yield Test.Params(minSuccTests,maxDiscTests,minSize,maxSize,StdRand,1,0))
+    } yield Test.Params(minSuccTests,maxDiscTests,minSize,maxSize))
 
   /** Arbitrary instance of gen params */
   implicit lazy val arbGenParams: Arbitrary[Gen.Params] =
